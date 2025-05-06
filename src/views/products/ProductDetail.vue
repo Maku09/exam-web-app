@@ -1,6 +1,6 @@
 <script setup>
-import { getProductDetail } from '@/api/services/product'
 import Button from '@/components/common/Button.vue'
+import useProductStore from '@/stores'
 import { ArrowLeftIcon } from '@heroicons/vue/20/solid'
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -11,8 +11,10 @@ const router = useRouter()
 const productDetail = ref()
 const isLoading = ref(true)
 
+const productStore = useProductStore()
+
 onMounted(async () => {
-  const { data } = await getProductDetail(route?.params?.id)
+  const { data } = await productStore._selectProduct(route?.params?.id)
   if (data) {
     isLoading.value = false
     productDetail.value = data
@@ -32,10 +34,10 @@ const getCategoryColor = (category) => {
 </script>
 
 <template>
-  <div class="relative">
-    <div v-if="isLoading" class="absolute z-10 bg-black/20 h-screen w-full flex">
+  <div class="h-full">
+    <div v-if="isLoading" class="bg-black/20 w-full h-full flex items-center justify-center">
       <svg
-        class="size-10 animate-spin flex-1 place-self-center text-white"
+        class="size-10 animate-spin text-white"
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 24 24"

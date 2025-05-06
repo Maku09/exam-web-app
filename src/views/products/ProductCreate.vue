@@ -59,7 +59,7 @@ const formValidate = useVuelidate(rules, form)
 const handleSubmit = async () => {
   const isValid = await formValidate.value.$validate()
   if (isValid) {
-    await productStore._create(form.value)
+    await productStore._createProduct(form.value)
     alert('Product created successfully.')
 
     form.value = initialData

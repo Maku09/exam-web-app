@@ -13,7 +13,7 @@ const productStore = useProductStore()
 
 onMounted(async () => {
   if (!productStore?.productList?.length) {
-    productStore._load()
+    productStore._loadProducts()
   }
 })
 </script>

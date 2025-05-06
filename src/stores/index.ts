@@ -17,7 +17,12 @@ interface State {
 
 const useProductStore = defineStore('product', () => {
   const productList = ref([] as State['productList'])
-  async function _load(page: number = 1, search: string = '', filter: number | null = null) {
+  const selectedProduct = ref(null)
+  async function _loadProducts(
+    page: number = 1,
+    search: string = '',
+    filter: number | null = null,
+  ) {
     try {
       const { data } = await productServices.getProduct()
       productList.value = data
@@ -26,7 +31,16 @@ const useProductStore = defineStore('product', () => {
     }
   }
 
-  async function _create(form: Object) {
+  async function _selectProduct(id: number) {
+    try {
+      return await productServices.getProductDetail(id)
+      // selectedProduct.value = data
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  async function _createProduct(form: Object) {
     try {
       const { data } = await productServices.createProduct(form)
       productList.value.unshift(data)
@@ -35,10 +49,34 @@ const useProductStore = defineStore('product', () => {
     }
   }
 
+  async function _updateProduct(id: number, form: Object) {
+    try {
+      const { data } = await productServices.updateProduct(id, form)
+      let currIndex = productList.value.findIndex((item) => item.id === data.id)
+      productList.value[currIndex] = data
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  async function _deleteProduct(id: number) {
+    try {
+      const { data } = await productServices.deleteProduct(id)
+      let currIndex = productList.value.findIndex((item) => item.id === data.id)
+      productList.value[currIndex] = data
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   return {
-    _load,
-    _create,
+    _loadProducts,
+    _selectProduct,
+    _createProduct,
+    _updateProduct,
+    _deleteProduct,
     productList,
+    selectedProduct,
   }
 })
 

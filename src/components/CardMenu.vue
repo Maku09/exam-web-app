@@ -1,6 +1,12 @@
 <script setup>
 import { EllipsisVerticalIcon, PencilIcon, TrashIcon } from '@heroicons/vue/20/solid'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const props = defineProps({
+  id: Number,
+})
 </script>
 <template>
   <Menu as="div">
@@ -28,6 +34,7 @@ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
                 active ? 'bg-blue-500 text-white' : 'text-gray-900',
                 'group flex w-full items-center rounded-md px-2 py-2 text-xs',
               ]"
+              @click="router.push({ name: 'ProductEdit', params: { id: props.id } })"
             >
               <PencilIcon :active="active" class="mr-2 h-4 w-4 text-blue-400" aria-hidden="true" />
               Edit
