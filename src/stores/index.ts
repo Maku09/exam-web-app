@@ -1,83 +1,21 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import * as productServices from '@/api/services/product'
 
-interface ProductInfo {
-  category: string
-  description: string
-  id: number
-  image: string
-  price: string
-  title: string
-}
+const useStore = defineStore('store', () => {
+  const deleteDialog = ref(false)
+  const selectedDeleteItem = ref()
 
-interface State {
-  productList: ProductInfo[]
-}
-
-const useProductStore = defineStore('product', () => {
-  const productList = ref([] as State['productList'])
-  const selectedProduct = ref(null)
-  async function _loadProducts(
-    page: number = 1,
-    search: string = '',
-    filter: number | null = null,
-  ) {
-    try {
-      const { data } = await productServices.getProduct()
-      productList.value = data
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  async function _selectProduct(id: number) {
-    try {
-      return await productServices.getProductDetail(id)
-      // selectedProduct.value = data
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  async function _createProduct(form: Object) {
-    try {
-      const { data } = await productServices.createProduct(form)
-      productList.value.unshift(data)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  async function _updateProduct(id: number, form: Object) {
-    try {
-      const { data } = await productServices.updateProduct(id, form)
-      let currIndex = productList.value.findIndex((item) => item.id === data.id)
-      productList.value[currIndex] = data
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  async function _deleteProduct(id: number) {
-    try {
-      const { data } = await productServices.deleteProduct(id)
-      let currIndex = productList.value.findIndex((item) => item.id === data.id)
-      productList.value[currIndex] = data
-    } catch (err) {
-      console.log(err)
-    }
+  const toggleDeleteDialog = (id: number | null) => {
+    selectedDeleteItem.value = id
+    deleteDialog.value = !deleteDialog.value
   }
 
   return {
-    _loadProducts,
-    _selectProduct,
-    _createProduct,
-    _updateProduct,
-    _deleteProduct,
-    productList,
-    selectedProduct,
+    toggleDeleteDialog,
+
+    deleteDialog,
+    selectedDeleteItem,
   }
 })
 
-export default useProductStore
+export default useStore

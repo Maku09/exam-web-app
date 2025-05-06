@@ -18,3 +18,6 @@ export async function updateProduct(id: number, form: Object): Promise<AxiosResp
   return await axios.put(`products/${id}`, form)
 }
 
+export async function deleteProduct(id: number): Promise<AxiosResponse> {
+  return await axios.delete(`products/${id}`)
+}

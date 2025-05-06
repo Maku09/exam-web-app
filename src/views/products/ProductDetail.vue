@@ -1,6 +1,6 @@
 <script setup>
 import Button from '@/components/common/Button.vue'
-import useProductStore from '@/stores'
+import useProductStore from '@/stores/product'
 import { ArrowLeftIcon } from '@heroicons/vue/20/solid'
 import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'

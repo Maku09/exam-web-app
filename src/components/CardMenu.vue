@@ -2,6 +2,9 @@
 import { EllipsisVerticalIcon, PencilIcon, TrashIcon } from '@heroicons/vue/20/solid'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 import { useRouter } from 'vue-router'
+import useStore from '@/stores'
+
+const store = useStore()
 
 const router = useRouter()
 const props = defineProps({
@@ -42,6 +45,7 @@ const props = defineProps({
           </MenuItem>
           <MenuItem v-slot="{ active }">
             <button
+              @click="store.toggleDeleteDialog(props.id)"
               :class="[
                 active ? 'bg-red-500 text-white' : 'text-gray-900',
                 'group flex w-full items-center rounded-md px-2 py-2 text-xs',

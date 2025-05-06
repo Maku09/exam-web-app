@@ -8,7 +8,7 @@ import { onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import useVuelidate from '@vuelidate/core'
 import { minLength, numeric, required, url } from '@vuelidate/validators'
-import useProductStore from '@/stores'
+import useProductStore from '@/stores/product'
 
 const route = useRoute()
 const router = useRouter()
@@ -33,7 +33,6 @@ const initialData = {
   price: 0,
   description: '',
   category: '',
-  //   category: 'jewelery',
   image: '',
 }
 
