@@ -1,5 +1,4 @@
 <script setup>
-import { createProduct, getProductDetail } from '@/api/services/product'
 import Button from '@/components/common/Button.vue'
 import Input from '@/components/common/Input.vue'
 import Select from '@/components/common/Select.vue'
@@ -9,20 +8,23 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import useVuelidate from '@vuelidate/core'
 import { minLength, numeric, required, url } from '@vuelidate/validators'
+import useProductStore from '@/stores'
 
 const router = useRouter()
 
-const intialData = {
+const productStore = useProductStore()
+
+const initialData = {
   id: 0,
-  title: 'string',
-  price: 0.1,
-  description: 'string',
+  title: '',
+  price: 0,
+  description: '',
   category: '',
   //   category: 'jewelery',
-  image: 'https://picsum.photos/200',
+  image: '',
 }
 
-const form = ref({ ...intialData })
+const form = ref({ ...initialData })
 
 const rules = {
   title: { required, minLength: minLength(4) },
@@ -57,15 +59,11 @@ const formValidate = useVuelidate(rules, form)
 const handleSubmit = async () => {
   const isValid = await formValidate.value.$validate()
   if (isValid) {
-    try {
-      const { data } = await createProduct(form.value)
-      console.log(data)
-      return
-      alert('success')
-      form.value = null
-    } catch (er) {
-      console.log(er)
-    }
+    await productStore._create(form.value)
+    alert('Product created successfully.')
+
+    form.value = initialData
+    router.push({ name: 'ProductList' })
   }
 }
 </script>

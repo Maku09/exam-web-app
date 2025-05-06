@@ -5,15 +5,16 @@ import Card from '@/components/Card.vue'
 import Button from '@/components/common/Button.vue'
 import { PlusIcon } from '@heroicons/vue/20/solid'
 import { useRouter } from 'vue-router'
-
-const productList = ref([])
+import useProductStore from '@/stores/'
 
 const router = useRouter()
 
+const productStore = useProductStore()
+
 onMounted(async () => {
-  console.log(productList.value)
-  const { data } = await getProduct()
-  productList.value = data
+  if (!productStore?.productList?.length) {
+    productStore._load()
+  }
 })
 </script>
 <template>
@@ -36,7 +37,7 @@ onMounted(async () => {
     <div
       class="flex-1 h-200 mt-5 grid lg:grid-cols-5 xl:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 space-x-3 space-y-5 overflow-auto"
     >
-      <template v-for="item in productList">
+      <template v-for="item in productStore.productList">
         <Card :product="item" />
       </template>
     </div>

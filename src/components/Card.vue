@@ -1,4 +1,6 @@
 <script setup>
+import CardMenu from '@/components/CardMenu.vue'
+
 const props = defineProps({
   product: Object,
 })
@@ -17,6 +19,7 @@ const getCategoryColor = (category) => {
 <template>
   <div class="px-2 py-3 shadow bg-white rounded-lg hover:shadow-xl">
     <div class="relative group">
+      <CardMenu />
       <img
         class="h-60 w-full object-contain ..."
         :alt="props.product.title"
@@ -29,6 +32,7 @@ const getCategoryColor = (category) => {
           >View</RouterLink
         >
       </div>
+
       <!-- <div class="invisible group-hover:visible">testing</div> -->
     </div>
     <div class="mt-2 px-1.5">
