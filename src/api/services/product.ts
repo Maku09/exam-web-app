@@ -14,3 +14,7 @@ export async function getProductDetail(id: number): Promise<AxiosResponse> {
   //   return await axios.get(`products/retrieve?page=${page}&search=${search}`)
   return await axios.get(`products/${id}`)
 }
+export async function createProduct(form: Object): Promise<AxiosResponse> {
+  //   return await axios.get(`products/retrieve?page=${page}&search=${search}`)
+  return await axios.post(`products`, form)
+}

@@ -1,9 +1,12 @@
 <script setup>
 import { getProductDetail } from '@/api/services/product'
+import Button from '@/components/common/Button.vue'
+import { ArrowLeftIcon } from '@heroicons/vue/20/solid'
 import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 
 const route = useRoute()
+const router = useRouter()
 
 const productDetail = ref()
 const isLoading = ref(true)
@@ -54,8 +57,13 @@ const getCategoryColor = (category) => {
     </div>
 
     <div v-else class="flex flex-col px-10">
-      <div class="shrink-0 h-10 flex flex-row mt-2 justify-between px-3 py-2">
-        <RouterLink :to="{ name: 'ProductList' }">Back</RouterLink>
+      <div class="shrink-0 flex flex-row mt-10 justify-between px-3 py-2">
+        <Button
+          class="bg-indigo-600 text-white"
+          :leftIcon="ArrowLeftIcon"
+          @click="router.push({ name: 'ProductList' })"
+          >Back</Button
+        >
         <div>Udpate</div>
       </div>
 
