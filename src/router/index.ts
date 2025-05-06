@@ -3,13 +3,18 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routes = [
   {
     path: '/',
-    name: 'All Component',
+    name: 'ProductList',
     component: () => import('@/views/index.vue'),
   },
+  // {
+  //   path: '/products',
+  //   name: 'ProductList',
+  //   component: ProductListView,
+  // },
   {
-    path: '/dashboard',
-    name: 'Dashboard',
-    component: () => import('@/views/index.vue'),
+    path: '/products/:id',
+    name: 'ProductDetail',
+    component: () => import('@/views/products/ProductDetail.vue'),
   },
 ]
 
