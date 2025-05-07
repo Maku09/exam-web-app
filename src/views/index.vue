@@ -1,6 +1,6 @@
 <script setup>
 import { getProduct } from '@/api/services/product'
-import { onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import Card from '@/components/Card.vue'
 import Button from '@/components/common/Button.vue'
 import Dialog from '@/components/Dialog.vue'
@@ -15,16 +15,15 @@ const productStore = useProductStore()
 const searchValue = ref('')
 const selectedCategory = ref('')
 
-const productData = ref()
+const productData = ref([])
 
 let timeout = 200
 const searchItem = (search, selectItem) => {
-  console.log(search, selectItem)
   clearTimeout(timeout)
   timeout = setTimeout(() => {
     productData.value = productStore?.productList.filter((item) => {
       if (search.length && selectItem.length) {
-        return item.title.includes(search) && item.category === selectItem
+        return item.title.toLowerCase().includes(search) && item.category === selectItem
       } else if (search.length) {
         return item.title.includes(search)
       } else if (selectItem.length) {
@@ -32,46 +31,55 @@ const searchItem = (search, selectItem) => {
       } else {
         return true
       }
-      // search.length
-      //   ? item.title.includes(search)
-      //   : false || selectItem.length
-      //     ? item.category === selectItem
-      //     : true,
     })
   }, 300)
 }
+
+productStore.$subscribe((state) => {
+  if (state?.events?.oldValue?.id) {
+    let currIndex = productData.value.findIndex((item) => item.id === state?.events?.oldValue?.id)
+    if (currIndex !== -1) {
+      productData.value.splice(currIndex, 1)
+    }
+  }
+  console.log(state)
+})
 
 watch([searchValue, selectedCategory], ([newSearch, newSelect], [oldSearch, oldSelect]) => {
   searchItem(newSearch, newSelect)
 })
 
-const categoryItem = [
-  {
-    key: 'jewelery',
-    value: 'jewelery',
-  },
-  {
-    key: "men's clothing",
-    value: "men's clothing",
-  },
-  {
-    key: "women's clothing",
-    value: "women's clothing",
-  },
-  {
-    key: 'electronics',
-    value: 'electronics',
-  },
-]
+const categoryItem = computed(() => {
+  if (!productData?.value?.length || !productStore?.productList?.length) {
+    return []
+  }
+
+  const seen = new Set()
+  return productStore.productList.reduce((acc, curr) => {
+    const category = curr.category
+    if (!seen.has(category)) {
+      seen.add(category)
+      const active = productData.value.some((item) => item.category === category)
+      acc.push({ category, active })
+    }
+    return acc
+  }, [])
+})
 
 const handleChange = (event) => {
   selectedCategory.value = event.target.value.trim()
 }
 
 onMounted(async () => {
-  if (!productStore?.productList?.length && !searchValue.length) {
-    await productStore._loadProducts()
-    productData.value = productStore?.productList
+  if (
+    (!productStore?.productList?.length || !productData.value.length) &&
+    !searchValue.length &&
+    !selectedCategory.length
+  ) {
+    if (!productStore?.productList?.length) {
+      await productStore._loadProducts()
+    }
+    productData.value = [...productStore?.productList]
   }
 })
 </script>
@@ -96,14 +104,23 @@ onMounted(async () => {
         </div>
         <div>
           <select
-            class="bg-gray-50 border text-sm text-gray-400 font-semibold rounded-full pl-5 selected"
+            class="bg-gray-50 border text-sm text-gray-700 capitalize font-semibold rounded-full pl-5 selected"
             @change="handleChange($event)"
           >
-            <option value="" class="text-gray-300" selected>Select Category</option>
+            <option value="" class="text-gray-400" selected>Select Category</option>
 
             <div v-if="categoryItem.length">
               <template v-for="item in categoryItem">
-                <option :value="item.key">{{ item.value }}</option>
+                <option
+                  :disabled="!item.active"
+                  :class="[
+                    !item.active && 'bg-gray-500/10',
+                    item.active && 'bg-white font-semibold',
+                  ]"
+                  :value="item.category"
+                >
+                  {{ item.category }}
+                </option>
               </template>
             </div>
           </select>

@@ -22,7 +22,7 @@ const useProductStore = defineStore('product', () => {
   async function _loadProducts() {
     try {
       const { data } = await productServices.getProduct()
-      productList.value = data
+      productList.value = [...data]
     } catch (err) {
       console.log(err)
     }
