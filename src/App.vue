@@ -7,6 +7,8 @@
     <main class="h-screen overflow-auto">
       <RouterView></RouterView>
     </main>
-    <div>footer</div>
+    <footer class="bg-gray-50 text-center px-5 py-4">
+      <p>&copy; 2025 Exam Project by Jay Mark Jamon. All rights reserved.</p>
+    </footer>
   </div>
 </template>

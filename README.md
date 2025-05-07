@@ -1,33 +1,52 @@
-# exam-web-app
+🚀 Tech Stack
 
-This template should help get you started developing with Vue 3 in Vite.
+Frontend Framework & Tools:
 
-## Recommended IDE Setup
+- Vue 3
+- Vue Router - Routing -
+- Pinia – State management
+- Vuelidate – Form validation
+- Axios – HTTP client
+- uuid – Unique IDs
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+UI & Styling:
 
-## Type Support for `.vue` Imports in TS
+- Tailwind CSS
+- @tailwindcss/forms – Form styling plugin
+- Heroicons Vue
+- @headlessui/vue – Accessible UI components
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+Build Tool:
 
-## Customize configuration
+- Vite
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+📁Project Structure
 
-## Project Setup
+src/
+├── api/ # Axios configuration with base URL
+├── assets/ # Static assets
+├── components/ # Reusable Vue components (Common & Other Product components)
+├── router/ # Vue Router configuration
+├── store/ # Pinia stores
+├── views/ # Route-based views
+├── App.vue # Root component
+├── main.ts # Entry point
 
-```sh
-yarn
-```
+Configuration
+🔐 Note: .env file is not included or used in this project.
 
-### Compile and Hot-Reload for Development
+Axios is pre-configured in src/api/axios.ts to use the base URL:
+https://fakestoreapi.com/
 
-```sh
-yarn dev
-```
+# Clone the repo
 
-### Type-Check, Compile and Minify for Production
+git clone https://github.com/Maku09/exam-web-app
+cd exam-web-app
 
-```sh
-yarn build
-```
+# Install dependencies
+
+npm install or yarn
+
+# Start development server
+
+npm run dev or yarn dev
