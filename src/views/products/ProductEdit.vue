@@ -21,7 +21,6 @@ const isLoading = ref(true)
 onMounted(async () => {
   const { data } = await productStore._selectProduct(route?.params?.id)
   if (data) {
-    console.log(data)
     isLoading.value = false
     form.value = data
   }
@@ -118,24 +117,26 @@ const handleSubmit = async () => {
         <!--  -->
         <div class="flex-1 px-3 mt-5 flex rounded-full flex-col">
           <div class="font-semibold text-gray-700 text-2xl mb-8">Edit Product:</div>
-          <form class="h-full flex flex-col space-y-7" @submit.prevent="handleSubmit">
-            <div>
-              <Input
-                label="Product Title"
-                required
-                type="text"
-                v-model="form.title"
-                :errors="formValidate.title.$errors"
-              />
-            </div>
-            <div>
-              <Select
-                label="Select Category"
-                :items="categoryItem"
-                required
-                v-model="form.category"
-                :errors="formValidate.category.$errors"
-              />
+          <form class="h-full flex flex-col space-y-10" @submit.prevent="handleSubmit">
+            <div class="grid grid-cols-2 space-x-10">
+              <div>
+                <Input
+                  label="Product Title"
+                  required
+                  type="text"
+                  v-model="form.title"
+                  :errors="formValidate.title.$errors"
+                />
+              </div>
+              <div>
+                <Select
+                  label="Select Category"
+                  :items="categoryItem"
+                  required
+                  v-model="form.category"
+                  :errors="formValidate.category.$errors"
+                />
+              </div>
             </div>
             <div>
               <TextArea
@@ -145,24 +146,28 @@ const handleSubmit = async () => {
                 :errors="formValidate.description.$errors"
               />
             </div>
-            <div>
-              <Input
-                label="Product Title"
-                required
-                type="number"
-                step="any"
-                v-model="form.price"
-                :errors="formValidate.price.$errors"
-              />
-            </div>
-            <div>
-              <Input
-                label="Image"
-                required
-                type="text"
-                v-model="form.image"
-                :errors="formValidate.image.$errors"
-              />
+
+            <div class="grid grid-cols-2 space-x-10">
+              <div>
+                <Input
+                  label="Product Price"
+                  required
+                  type="number"
+                  step="any"
+                  v-model="form.price"
+                  :errors="formValidate.price.$errors"
+                />
+              </div>
+              <div>
+                <Input
+                  label="Image"
+                  required
+                  placeholder="Example: Http://testing.com"
+                  type="text"
+                  v-model="form.image"
+                  :errors="formValidate.image.$errors"
+                />
+              </div>
             </div>
 
             <Button class="mt-5 bg-blue-600 text-white">Submit</Button>

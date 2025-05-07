@@ -1,7 +1,6 @@
 <script setup>
 import { v4 as uuid } from 'uuid'
 const modelValue = defineModel('modelValue')
-// const emit = defineEmits(["update:modelValue"]);
 const props = defineProps({
   label: String,
   type: String,

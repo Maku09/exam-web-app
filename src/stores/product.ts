@@ -24,16 +24,17 @@ const useProductStore = defineStore('product', () => {
       const { data } = await productServices.getProduct()
       productList.value = [...data]
     } catch (err) {
-      console.log(err)
+      alert('Error. Please reload.')
+      console.error('Axios error:', err)
     }
   }
 
   async function _selectProduct(id: number) {
     try {
       return await productServices.getProductDetail(id)
-      // selectedProduct.value = data
     } catch (err) {
-      console.log(err)
+      alert('Error. Please reload.')
+      console.error('Axios error:', err)
     }
   }
 
@@ -42,7 +43,8 @@ const useProductStore = defineStore('product', () => {
       const { data } = await productServices.createProduct(form)
       productList.value.unshift(data)
     } catch (err) {
-      console.log(err)
+      alert('Error. Please reload.')
+      console.error('Axios error:', err)
     }
   }
 
@@ -52,7 +54,8 @@ const useProductStore = defineStore('product', () => {
       let currIndex = productList.value.findIndex((item) => item.id === data.id)
       productList.value[currIndex] = data
     } catch (err) {
-      console.log(err)
+      alert('Error. Please reload.')
+      console.error('Axios error:', err)
     }
   }
 
@@ -64,7 +67,8 @@ const useProductStore = defineStore('product', () => {
         productList.value.splice(currIndex, 1)
       }
     } catch (err) {
-      console.log(err)
+      alert('Error. Please reload.')
+      console.error('Axios error:', err)
     }
   }
 

@@ -1,6 +1,5 @@
 <script setup>
 import CardMenu from '@/components/CardMenu.vue'
-import { useRouter } from 'vue-router'
 
 const props = defineProps({
   product: Object,
@@ -20,13 +19,14 @@ const getCategoryColor = (category) => {
 <template>
   <div class="px-2 py-3 shadow bg-white rounded-lg hover:shadow-xl">
     <div class="relative group">
-      <CardMenu :id="props.product.id" />
+      <CardMenu :id="props.product.id" :class="[props?.product?.id > 20 && 'hidden']" />
       <img
         class="h-60 w-full object-contain ..."
         :alt="props.product.title"
         :src="props.product.image"
       />
       <div
+        :class="[props?.product?.id > 20 && '!invisible']"
         class="invisible group-hover:visible absolute bottom-0 bg-emerald-500/50 h-8 w-full content-center text-center text-emerald-900 font-bold hover:underline"
       >
         <RouterLink :to="{ name: 'ProductDetail', params: { id: props.product.id } }"
