@@ -23,14 +23,16 @@ Build Tool:
 📁Project Structure
 
 src/
-├── api/ # Axios configuration with base URL
-├── assets/ # Static assets
-├── components/ # Reusable Vue components (Common & Other Product components)
-├── router/ # Vue Router configuration
-├── store/ # Pinia stores
-├── views/ # Route-based views
-├── App.vue # Root component
-├── main.ts # Entry point
+
+- api/ # Axios configuration with base URL
+- assets/ # Static assets
+- components/ # Reusable Vue components (Common & Other Product components)
+- router/ # Vue Router configuration
+- store/ # Pinia stores
+- views/ # Route-based views
+- App.vue # Root component
+- main.ts # Entry point
+- tailwind.css # Tailwind configuration
 
 Configuration
 🔐 Note: .env file is not included or used in this project.
