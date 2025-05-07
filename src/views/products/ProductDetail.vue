@@ -66,7 +66,6 @@ const getCategoryColor = (category) => {
           @click="router.push({ name: 'ProductList' })"
           >Back</Button
         >
-        <div>Udpate</div>
       </div>
 
       <div class="flex-1 px-3 mt-10 flex bg-white rounded-full">
