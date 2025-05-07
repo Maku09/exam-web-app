@@ -109,7 +109,7 @@ onMounted(async () => {
         ></path>
       </svg>
     </div>
-    <div class="flex flex-col px-10">
+    <div v-else class="flex flex-col px-10">
       <div class="shrink-0 flex flex-row mt-10 justify-between px-3 py-2">
         <div>
           <Button
