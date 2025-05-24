@@ -44,7 +44,7 @@ class ProductController extends Controller
                 return $item;
             });
 
-        return $this->success($products);
+        return $this->success($products, 'Product retrieved successfully');
     }
 
     public function store(StoreRequest $request)
@@ -63,10 +63,8 @@ class ProductController extends Controller
                 ]
             );
 
-            $photos = request()->file('photos');
-            if ($photos) {
-                $this->product_photo_insert($photos, $product->id);
-            }
+            $photos = $request->photos;
+            $this->product_photo_insert($photos, $product->id);
 
             DB::commit();
         } catch (\Exception $e) {
@@ -77,7 +75,7 @@ class ProductController extends Controller
         }
 
         // return response()->json($product);
-        return $this->success($product);
+        return $this->success($product, 'Product added successfully');
     }
 
     public function show(int $id)
@@ -87,6 +85,10 @@ class ProductController extends Controller
         try {
             if (!$product) {
                 return $this->error(null, 'Product not found.', Response::HTTP_NOT_FOUND);
+            }
+
+            foreach ($product->product_photos as $photos) {
+                $photos['photo_url'] = $photos->product_photo_url;
             }
 
             return $this->success($product);
@@ -118,28 +120,57 @@ class ProductController extends Controller
             return $this->error(null, 'Server Error.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $this->success(null, 'Product record successfully deleted');
+        return $this->success(null, 'Product record deleted successfully');
     }
 
     private function product_photo_insert($photos, $product_id)
     {
-        $collectFiles = [];
+
         $directory = "products/{$product_id}";
         foreach ($photos as $key => $photo) {
-            $image_name = $photo->getClientOriginalName();
+            $data = $photo['url'];
+
+            $base64String = substr($data, strpos($data, ',') + 1);
+            $base64String = str_replace(' ', '+', $base64String);
+            $imageData = base64_decode($base64String);
+
+            if ($imageData === false) {
+                throw new \Exception('Base64 decode failed');
+            }
+
+            $decodedImage = base64_decode($base64String);
+            $fileSizeInBytes = strlen($decodedImage);
+            $imageName = $photo['file_name'];
+
+            $imageName = preg_replace('/[^a-zA-Z0-9_\.-]/', '_', $imageName);
 
             $collectFiles[$key] = [
                 'product_id' => $product_id,
-                'image_name' => $image_name,
+                'image_name' => $imageName,
                 'image_path' => $directory,
-
-
-                'image_size' => $photo->getSize(),
-                // 'updated_by' => Auth::id(),
+                'image_size' => $fileSizeInBytes,
             ];
-            Storage::disk('public')->putFileAs($directory, new File($photo), $image_name);
+            Storage::disk('public')->put("{$directory}/{$imageName}", $imageData);
         }
 
         ProductPhoto::insert($collectFiles);
+        // $collectFiles = [];
+        // $directory = "products/{$product_id}";
+        // foreach ($photos as $key => $photo) {
+        //     $image_name = $photo->getClientOriginalName();
+
+        //     $collectFiles[$key] = [
+        //         'product_id' => $product_id,
+        //         'image_name' => $image_name,
+        //         'image_path' => $directory,
+
+
+        //         'image_size' => $photo->getSize(),
+        //         // 'updated_by' => Auth::id(),
+        //     ];
+        //     Storage::disk('public')->putFileAs($directory, new File($photo), $image_name);
+        // }
+
+        // ProductPhoto::insert($collectFiles);
     }
 }

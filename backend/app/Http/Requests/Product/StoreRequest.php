@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Product;
 
+use App\Rules\Base64Image;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequest extends FormRequest
@@ -28,9 +29,7 @@ class StoreRequest extends FormRequest
             'description' => 'required|min:10',
             // 'description' => 'required|min:50',
             'photos' => 'required',
-            'photos.*' => 'mimes:jpg,jpeg,png'
+            'photos.*' => [new Base64Image]
         ];
-        
-
     }
 }
