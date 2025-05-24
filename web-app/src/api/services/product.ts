@@ -16,3 +16,7 @@ export async function getProductDetail(id: number): Promise<AxiosResponse> {
 export async function createProduct(formData: FormData): Promise<AxiosResponse> {
   return await axios.post(`api/v1/products/`, formData);
 }
+
+export async function deleteProduct(id: number): Promise<AxiosResponse> {
+  return await axios.delete(`api/v1/products/${id}`);
+}

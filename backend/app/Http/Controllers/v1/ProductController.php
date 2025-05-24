@@ -34,7 +34,8 @@ class ProductController extends Controller
                 'title',
                 'description',
                 'category_id',
-                'price'
+                'price',
+                'created_by'
             )
             ->paginate()
             ->through(function ($item) {

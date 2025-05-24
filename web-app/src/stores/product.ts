@@ -80,18 +80,25 @@ const useProductStore = defineStore('product', () => {
 //     }
 //   }
 
-//   async function _deleteProduct(id: number) {
-//     try {
-//       const { data } = await productServices.deleteProduct(id)
-//       let currIndex = productList.value.findIndex((item) => item.id === data.id)
-//       if (currIndex !== -1) {
-//         productList.value.splice(currIndex, 1)
-//       }
-//     } catch (err) {
-//       alert('Error. Please reload.')
-//       console.error('Axios error:', err)
-//     }
-//   }
+  async function _deleteProduct(id: number) {
+    try {
+      const response = await productServices.deleteProduct(id)
+      if(response.status === 200){
+        let currIndex = productList.value.findIndex((item) => item.id === id)
+      console.log(currIndex, productList.value)
+        if (currIndex !== -1) {
+          productList.value.splice(currIndex, 1)
+        }
+      }
+    } catch (err: any) {
+      if (err?.status === 422) {
+        alert('Validation Error: ' + (err?.response?.data?.message || 'Invalid input.'));
+      } else {
+        alert('Error: ' + (err?.message || 'Something went wrong.'));
+      }
+      return err;
+    }
+  }
 
   return {
     _loadProducts,
@@ -99,7 +106,7 @@ const useProductStore = defineStore('product', () => {
     _selectProduct,
     _createProduct,
     // _updateProduct,
-    // _deleteProduct,
+    _deleteProduct,
     productList,
     selectedProduct,
   }

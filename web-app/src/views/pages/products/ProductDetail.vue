@@ -60,7 +60,10 @@
       </svg>
     </div>
 
-    <div class="flex flex-col p-5">
+    <div
+      v-else
+      class="flex flex-col p-5"
+    >
       <!-- tool -->
       <div class="text-2xl font-semibold text-gray-500 uppercase">View Product</div>
       <div class="flex justify-between items-center">
@@ -78,6 +81,7 @@
         <div class="mx-auto flex items-center px-3 py-7 rounded space-x-5">
           <img
             class="h-96 w-80 object-contain ..."
+            loading="lazy"
             :alt="productDetail?.title"
             :src="productDetail?.product_photos[0]?.photo_url"
           />

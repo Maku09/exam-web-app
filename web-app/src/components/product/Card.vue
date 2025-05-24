@@ -1,5 +1,5 @@
 <script setup>
-  //   import CardMenu from "@/components/CardMenu.vue";
+  import CardMenu from "@/components/product/CardMenu.vue";
 
   const props = defineProps({
     product: Object,
@@ -18,10 +18,7 @@
 <template>
   <div class="px-2 py-3 shadow bg-white rounded-lg hover:shadow-xl">
     <div class="relative group">
-      <!-- <CardMenu
-        :id="props.product.id"
-        :class="[props?.product?.id > 20 && 'hidden']"
-      /> -->
+      <CardMenu :product="props.product" />
       <img
         class="h-60 w-full object-contain ..."
         :alt="props.product.title"

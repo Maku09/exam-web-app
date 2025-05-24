@@ -141,30 +141,56 @@
                 class="bg-white hover:bg-gray-50"
                 v-for="(file, index) in modelValue"
               >
-                <th
-                  scope="row"
-                  class="px-3 py-4"
-                >
-                  {{ index + 1 }}
-                </th>
-                <td class="px-6 py-4">{{ file.file_name }}</td>
-                <td>
-                  <img
-                    width="100"
-                    height="100"
-                    id="blah"
-                    :src="file.url"
-                    :alt="file.file_name"
-                  />
-                </td>
-                <td class="text-center w-1">
-                  <div
-                    class="inline-flex p-1 rounded-full hover:bg-gray-200"
-                    @click="removeFile(index)"
+                <template v-if="Object.keys(file).length === 2">
+                  <th
+                    scope="row"
+                    class="px-3 py-4"
                   >
-                    <XMarkIcon class="w-7 h-7" />
-                  </div>
-                </td>
+                    {{ index + 1 }}
+                  </th>
+                  <td class="px-6 py-4">{{ file.file_name }}</td>
+                  <td>
+                    <img
+                      width="100"
+                      height="100"
+                      :src="file.url"
+                      :alt="file.file_name"
+                    />
+                  </td>
+                  <td class="text-center w-1">
+                    <div
+                      class="inline-flex p-1 rounded-full hover:bg-gray-200"
+                      @click="removeFile(index)"
+                    >
+                      <XMarkIcon class="w-7 h-7" />
+                    </div>
+                  </td>
+                </template>
+                <template v-else>
+                  <th
+                    scope="row"
+                    class="px-3 py-4"
+                  >
+                    {{ index + 1 }}
+                  </th>
+                  <td class="px-6 py-4">{{ file.image_name }}</td>
+                  <td>
+                    <img
+                      width="100"
+                      height="100"
+                      :src="file?.photo_url"
+                      :alt="file?.image_name"
+                    />
+                  </td>
+                  <td class="text-center w-1">
+                    <div
+                      class="inline-flex p-1 rounded-full hover:bg-gray-200"
+                      @click="removeFile(index)"
+                    >
+                      <XMarkIcon class="w-7 h-7" />
+                    </div>
+                  </td>
+                </template>
               </tr>
             </tbody>
           </table>

@@ -1,6 +1,7 @@
 <script setup>
   import Button from "@/components/common/Button.vue";
   import Card from "@/components/product/Card.vue";
+  import Dialog from "@/components/product/Dialog.vue";
   import router from "@/router";
   import useProductStore from "@/stores/product";
   import { PlusIcon } from "@heroicons/vue/20/solid";
@@ -12,8 +13,8 @@
 
   onMounted(async () => {
     if (
-      !productStore?.productList?.length ||
-      !productData.value.length
+      !productStore?.productList?.length
+      // || !productData.value.length
       //   &&
       //   !searchValue.length &&
       //   !selectedCategory.length
@@ -22,7 +23,7 @@
         await productStore._loadProducts();
       }
       //   isLoading.value = false;
-      productData.value = [...productStore?.productList];
+      // productData.value = [...productStore?.productList];
     }
   });
 </script>
@@ -39,19 +40,16 @@
           >Create</Button
         >
       </div>
-      <div class="flex space-x-3">
-        <div>Search</div>
-        <div>Category</div>
-      </div>
     </div>
 
     <!-- PRODUCT LIST -->
     <div
       class="flex-1 h-200 mt-5 grid lg:grid-cols-5 xl:grid-cols-6 md:grid-cols-4 sm:grid-cols-2 space-x-3 space-y-5 overflow-auto"
     >
-      <template v-for="item in productData">
+      <template v-for="item in productStore?.productList">
         <Card :product="item" />
       </template>
     </div>
   </div>
+  <Dialog />
 </template>
