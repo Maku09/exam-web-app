@@ -13,7 +13,7 @@ class ProductPhoto extends Model
         return $this->belongsTo(Product::class);
     }
 
-    public function getProductPhotoUrlAttribute(): string
+    public function getPhotoUrlAttribute(): string
     {
         return Storage::temporaryUrl("{$this->image_path}/{$this->image_name}", now()->addMinutes(5));
     }

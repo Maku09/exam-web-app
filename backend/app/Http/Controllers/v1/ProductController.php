@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\ShowRequest;
 use App\Http\Requests\Product\StoreRequest;
+use App\Http\Requests\Product\UpdateRequest;
 use App\Models\Product;
 use App\Models\ProductPhoto;
 use App\Traits\HttpResponses;
+use DateTime;
 use Exception;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Auth;
@@ -35,12 +37,14 @@ class ProductController extends Controller
                 'description',
                 'category_id',
                 'price',
-                'created_by'
+                'created_by',
+                'created_at'
             )
+            ->orderBy('created_at', 'desc')
             ->paginate()
             ->through(function ($item) {
                 foreach ($item['product_photos'] as $photo) {
-                    $photo['photo_url'] = $photo->product_photo_url;
+                    $photo['photo_url'] = $photo->photo_url;
                 }
                 return $item;
             });
@@ -75,29 +79,61 @@ class ProductController extends Controller
             return $this->error([], 'ERR_PRODUCT_STORE', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        // return response()->json($product);
+        $product->load(['category', 'product_photos']);
+        $product->product_photos->each->append('photo_url');
+
         return $this->success($product, 'Product added successfully');
     }
 
     public function show(int $id)
     {
         $product = Product::find($id);
-
         try {
             if (!$product) {
                 return $this->error(null, 'Product not found.', Response::HTTP_NOT_FOUND);
             }
 
-            foreach ($product->product_photos as $photos) {
-                $photos['photo_url'] = $photos->product_photo_url;
-            }
+            $product->product_photos->each->append('photo_url');
 
             return $this->success($product);
         } catch (Exception $e) {
             return $this->error(null, 'Server Error.', Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-    public function update() {}
+    public function update(int $id, UpdateRequest $request)
+    {
+        $product = Product::find($id);
+
+        Gate::authorize('update', $product);
+
+        DB::beginTransaction();
+        try {
+            $product->title = $request->get('title');
+            $product->price = $request->get('price');
+            $product->category_id = $request->get('category_id');
+            $product->description = $request->get('description');
+            $product->updated_by = Auth::id();
+            $product->updated_at = new DateTime();
+
+            if (count($request->get('old_photos'))) {
+                ProductPhoto::whereIn('id', $request->get('old_photos'))->delete();
+            }
+
+            if (count($request->get('new_photos'))) {
+                $this->product_photo_insert($request->get('new_photos'), $product->id);
+            }
+
+            $product->save();
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            return $this->error(null, 'Server Error.', Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+        $product->load(['category', 'product_photos']);
+        $product->product_photos->each->append('photo_url');
+        return $this->success($product, 'Product updated successfully.');
+    }
     public function destroy(int $id)
     {
 
@@ -155,23 +191,5 @@ class ProductController extends Controller
         }
 
         ProductPhoto::insert($collectFiles);
-        // $collectFiles = [];
-        // $directory = "products/{$product_id}";
-        // foreach ($photos as $key => $photo) {
-        //     $image_name = $photo->getClientOriginalName();
-
-        //     $collectFiles[$key] = [
-        //         'product_id' => $product_id,
-        //         'image_name' => $image_name,
-        //         'image_path' => $directory,
-
-
-        //         'image_size' => $photo->getSize(),
-        //         // 'updated_by' => Auth::id(),
-        //     ];
-        //     Storage::disk('public')->putFileAs($directory, new File($photo), $image_name);
-        // }
-
-        // ProductPhoto::insert($collectFiles);
     }
 }
