@@ -17,6 +17,10 @@ export async function createProduct(formData: FormData): Promise<AxiosResponse> 
   return await axios.post(`api/v1/products/`, formData);
 }
 
+export async function updateProduct(formData: FormData, id: number): Promise<AxiosResponse> {
+  return await axios.put(`api/v1/products/${id}`, formData);
+}
+
 export async function deleteProduct(id: number): Promise<AxiosResponse> {
   return await axios.delete(`api/v1/products/${id}`);
 }

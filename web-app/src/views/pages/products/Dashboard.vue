@@ -1,5 +1,6 @@
 <script setup>
   import Button from "@/components/common/Button.vue";
+  import Loading from "@/components/Loading.vue";
   import Card from "@/components/product/Card.vue";
   import Dialog from "@/components/product/Dialog.vue";
   import router from "@/router";
@@ -10,25 +11,23 @@
   const productStore = useProductStore();
 
   const productData = ref([]);
+  const isLoading = ref(true);
 
   onMounted(async () => {
-    if (
-      !productStore?.productList?.length
-      // || !productData.value.length
-      //   &&
-      //   !searchValue.length &&
-      //   !selectedCategory.length
-    ) {
+    if (!productStore?.productList?.length) {
       if (!productStore?.productList?.length) {
         await productStore._loadProducts();
       }
-      //   isLoading.value = false;
-      // productData.value = [...productStore?.productList];
     }
+    isLoading.value = false;
   });
 </script>
 <template>
-  <div class="flex flex-col p-5 h-full">
+  <Loading v-if="isLoading" />
+  <div
+    v-else
+    class="flex flex-col p-5 h-full"
+  >
     <!-- tool -->
     <div class="text-2xl font-semibold text-gray-500 uppercase">Product List</div>
     <div class="flex justify-between items-center">

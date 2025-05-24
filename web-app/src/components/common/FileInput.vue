@@ -3,6 +3,9 @@
   import { computed, ref } from "vue";
 
   const modelValue = defineModel("modelValue");
+
+  const emit = defineEmits(["removeEvent"]);
+
   const props = defineProps({
     errors: Object,
   });
@@ -67,7 +70,10 @@
     });
   }
 
-  function removeFile(index) {
+  function removeFile(index, file_id = 0) {
+    if (file_id) {
+      emit("removeEvent", file_id);
+    }
     modelValue.value.splice(index, 1);
   }
 </script>
@@ -185,7 +191,7 @@
                   <td class="text-center w-1">
                     <div
                       class="inline-flex p-1 rounded-full hover:bg-gray-200"
-                      @click="removeFile(index)"
+                      @click="removeFile(index, file.id)"
                     >
                       <XMarkIcon class="w-7 h-7" />
                     </div>

@@ -56,9 +56,12 @@ const useProductStore = defineStore('product', () => {
 
   async function _createProduct(form: FormData) {
     try {
-      const data = await productServices.createProduct(form)
-      // productList.value.unshift(data)
-      return data
+      const response = await productServices.createProduct(form)
+      if(response.status === 200){
+        const { data } = response.data
+        productList.value.unshift(data)
+      }
+      return response
     } catch (err: any) {
       if (err?.status === 422) {
         alert('Validation Error: ' + (err?.response?.data?.message || 'Invalid input.'));
@@ -69,16 +72,21 @@ const useProductStore = defineStore('product', () => {
     }
   }
 
-//   async function _updateProduct(id: number, form: Object) {
-//     try {
-//       const { data } = await productServices.updateProduct(id, form)
-//       let currIndex = productList.value.findIndex((item) => item.id === data.id)
-//       productList.value[currIndex] = data
-//     } catch (err) {
-//       alert('Error. Please reload.')
-//       console.error('Axios error:', err)
-//     }
-//   }
+  async function _updateProduct(form: FormData, id: number) {
+    try {
+      const response = await productServices.updateProduct(form, id)
+      if(response.status === 200){
+        const { data } = response.data
+        let currIndex = productList.value.findIndex((item) => item.id === data.id)
+        productList.value[currIndex] = data
+        console.log(data)
+      }
+      return response
+    } catch (err) {
+      alert('Error. Please reload.')
+      console.error('Axios error:', err)
+    }
+  }
 
   async function _deleteProduct(id: number) {
     try {
@@ -105,7 +113,7 @@ const useProductStore = defineStore('product', () => {
     meta,
     _selectProduct,
     _createProduct,
-    // _updateProduct,
+    _updateProduct,
     _deleteProduct,
     productList,
     selectedProduct,
