@@ -48,21 +48,26 @@ const useProductStore = defineStore('product', () => {
   async function _selectProduct(id: number) {
     try {
       return await productServices.getProductDetail(id)
-    } catch (err) {
-      alert('Error. Please reload.')
+    } catch (err: any ) {
+      alert('Error: ' + (err?.message || 'Something went wrong.'));
       console.error('Axios error:', err)
     }
   }
 
-//   async function _createProduct(form: Object) {
-//     try {
-//       const { data } = await productServices.createProduct(form)
-//       productList.value.unshift(data)
-//     } catch (err) {
-//       alert('Error. Please reload.')
-//       console.error('Axios error:', err)
-//     }
-//   }
+  async function _createProduct(form: FormData) {
+    try {
+      const data = await productServices.createProduct(form)
+      // productList.value.unshift(data)
+      return data
+    } catch (err: any) {
+      if (err?.status === 422) {
+        alert('Validation Error: ' + (err?.response?.data?.message || 'Invalid input.'));
+      } else {
+        alert('Error: ' + (err?.message || 'Something went wrong.'));
+      }
+      return err;
+    }
+  }
 
 //   async function _updateProduct(id: number, form: Object) {
 //     try {
@@ -92,7 +97,7 @@ const useProductStore = defineStore('product', () => {
     _loadProducts,
     meta,
     _selectProduct,
-    // _createProduct,
+    _createProduct,
     // _updateProduct,
     // _deleteProduct,
     productList,

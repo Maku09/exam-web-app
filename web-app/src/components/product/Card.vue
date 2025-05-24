@@ -25,7 +25,8 @@
       <img
         class="h-60 w-full object-contain ..."
         :alt="props.product.title"
-        :src="props.product.image"
+        loading="lazy"
+        :src="props?.product?.product_photos[0]?.photo_url"
       />
       <div
         :class="[props?.product?.id > 20 && '!invisible']"

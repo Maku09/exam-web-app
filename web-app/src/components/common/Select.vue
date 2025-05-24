@@ -19,13 +19,14 @@
   interface Props {
     label?: string;
     items?: Array<IDropdownListItem>;
-    // errors: IError[];
+    errors: IError[];
     required?: boolean;
   }
 
   const props = withDefaults(defineProps<Props>(), {
     label: "label",
     items: Array,
+    errors: Object,
   });
 
   const id = uuid();
@@ -42,7 +43,7 @@
   <select
     :id="id"
     v-model="modelValue"
-    class="bg-gray-50 border font-semibold rounded-sm border-gray-300 text-gray-900 focus:ring-primary focus:border-primary block w-full p-2.5"
+    class="bg-gray-50 border rounded-sm border-gray-300 text-gray-900 focus:ring-primary focus:border-primary block w-full p-2.5"
   >
     <option
       value=""
@@ -62,7 +63,7 @@
   <!-- v-model="form.name" -->
   <div class="p-2 h-2 text-red-500">
     <span class="text-sm px-2">
-      <!-- {{ props.errors.length ? props.errors?.[0]?.$message : "" }} -->
+      {{ props.errors.length ? props.errors?.[0]?.$message : "" }}
     </span>
   </div>
 </template>

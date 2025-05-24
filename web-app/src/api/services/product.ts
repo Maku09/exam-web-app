@@ -13,6 +13,6 @@ export async function getProductDetail(id: number): Promise<AxiosResponse> {
   return await axios.get(`api/v1/products/${id}`);
 }
 
-export async function logout(): Promise<AxiosResponse> {
-  return await axios.post(`api/v1/logout`);
+export async function createProduct(formData: FormData): Promise<AxiosResponse> {
+  return await axios.post(`api/v1/products/`, formData);
 }

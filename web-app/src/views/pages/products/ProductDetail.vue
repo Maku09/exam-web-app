@@ -79,7 +79,7 @@
           <img
             class="h-96 w-80 object-contain ..."
             :alt="productDetail?.title"
-            :src="productDetail?.image"
+            :src="productDetail?.product_photos[0]?.photo_url"
           />
           <div class="flex flex-col space-y-3 pl-20 w-[780px]">
             <span class="font-bold text-3xl text-gray-800">{{ productDetail?.title }}</span>

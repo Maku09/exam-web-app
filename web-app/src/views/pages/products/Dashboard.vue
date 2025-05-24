@@ -27,7 +27,7 @@
   });
 </script>
 <template>
-  <div class="flex flex-col p-5">
+  <div class="flex flex-col p-5 h-full">
     <!-- tool -->
     <div class="text-2xl font-semibold text-gray-500 uppercase">Product List</div>
     <div class="flex justify-between items-center">

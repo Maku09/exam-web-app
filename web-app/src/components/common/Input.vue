@@ -4,10 +4,11 @@
   // const emit = defineEmits(["update:modelValue"]);
   const props = defineProps({
     label: String,
-    type: String,
     errors: Array | null,
     required: Boolean,
     type: String,
+    step: String | null,
+    placeholder: String,
   });
 
   const id = uuid();
@@ -24,6 +25,8 @@
     class="rounded mb-1"
     v-model="modelValue"
     :type="props.type"
+    :placeholder="props.placeholder"
+    :step="props.step"
   />
 
   <div class="text-red-500">

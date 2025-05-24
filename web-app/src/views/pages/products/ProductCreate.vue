@@ -2,7 +2,8 @@
   import Button from "@/components/common/Button.vue";
   import Input from "@/components/common/Input.vue";
   import Select from "@/components/common/Select.vue";
-  //   import TextArea from "@/components/common/TextArea.vue";
+  import FileInput from "@/components/common/FileInput.vue";
+  import TextArea from "@/components/common/TextArea.vue";
   import { ArrowLeftIcon } from "@heroicons/vue/20/solid";
   import { ref } from "vue";
   import { useRouter } from "vue-router";
@@ -15,40 +16,35 @@
   const productStore = useProductStore();
 
   const initialData = {
-    id: 0,
     title: "",
     price: 0,
     description: "",
-    category: "",
-    image: "",
+    category_id: "",
+    photos: [],
   };
 
   const form = ref({ ...initialData });
 
   const rules = {
     title: { required, minLength: minLength(4) },
-    category: { required },
+    category_id: { required },
     price: { required, numeric },
-    image: { required, url },
-    description: { required, minLength: minLength(4) },
+    photos: { required },
+    description: { required, minLength: minLength(10) },
   };
 
   const categoryItem = [
     {
-      key: "jewelery",
-      value: "jewelery",
+      key: 1,
+      value: "Book",
     },
     {
-      key: "men's clothing",
-      value: "men's clothing",
+      key: 2,
+      value: "Clothes",
     },
     {
-      key: "women's clothing",
-      value: "women's clothing",
-    },
-    {
-      key: "electronics",
-      value: "electronics",
+      key: 3,
+      value: "Shoes",
     },
   ];
 
@@ -57,11 +53,11 @@
   const handleSubmit = async () => {
     const isValid = await formValidate.value.$validate();
     if (isValid) {
-      await productStore._createProduct(form.value);
-      alert("Product created successfully.");
-
-      form.value = initialData;
-      router.push({ name: "ProductList" });
+      const { status } = await productStore._createProduct(form.value);
+      if (status === 200) {
+        form.value = initialData;
+        router.push({ name: "ProductList" });
+      }
     }
   };
 </script>
@@ -80,33 +76,61 @@
         >
       </div>
     </div>
-
     <div class="flex-1 px-3 mt-5 rounded-full">
       <form @submit.prevent="handleSubmit">
-        <div class="flex flex-col">
-          <Input
-            label="Product Title"
-            required
-            type="text"
-            v-model="form.title"
-            :errors="formValidate.title.$errors"
-          />
-          <Select
-            label="Select Category"
-            :items="categoryItem"
-            required
-            v-model="form.category"
-          />
-          <!-- :errors="formValidate.category.$errors" -->
+        <div class="flex flex-row space-x-10">
+          <div class="flex-1 flex flex-col">
+            <div class="flex flex-col flex-1 mb-3">
+              <Input
+                label="Product Title"
+                required
+                type="text"
+                v-model="form.title"
+                :errors="formValidate.title"
+              />
+            </div>
+            <div class="mb-7">
+              <Select
+                label="Select Category"
+                :items="categoryItem"
+                required
+                v-model="form.category_id"
+                :errors="formValidate.category_id.$errors"
+              />
+            </div>
+            <div class="flex flex-col flex-1 mb-4">
+              <Input
+                label="Price"
+                required
+                type="number"
+                step="any"
+                v-model="form.price"
+                :errors="formValidate.price"
+              />
+            </div>
+            <div class="mb-5">
+              <TextArea
+                label="Description"
+                required
+                v-model="form.description"
+                :errors="formValidate.description.$errors"
+              />
+            </div>
+          </div>
+          <div class="flex-1">
+            <FileInput
+              v-model="form.photos"
+              :errors="formValidate.photos.$errors"
+            />
+          </div>
         </div>
-        <div>
-          <!-- <TextArea
+        <!-- -->
+        <!-- <TextArea
             label="Description"
             required
             v-model="form.description"
             :errors="formValidate.description.$errors"
           /> -->
-        </div>
         <!-- <div class="grid grid-cols-2 space-x-10">
           <div>
             <Input
@@ -130,7 +154,7 @@
           </div>
         </div> -->
 
-        <Button class="mt-5 bg-blue-600 text-white">Submit</Button>
+        <Button class="mt-5 bg-indigo-600 text-white">Submit</Button>
       </form>
     </div>
   </div>
